@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "phygital-plus",
+  "version": "0.2.0",
+  "description": "Phygital+ generation models over MCP: pick a model, read its live input schema, hand over a file, start a generation and poll it to the result.",
+  "author": {
+    "name": "Phygital+"
+  },
+  "homepage": "https://dev.phygital.plus/mcp",
+  "keywords": ["mcp", "generation", "image", "video", "phygital"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Phygital+",
+        "shortDescription": "Image and video generation",
+        "longDescription": "Runs Phygital+ generative models from the agent: pick a model from the live catalog, build its input from the model's own JSON Schema, upload a file, start a generation and wait for the result. Every call runs on your Phygital+ account and spends its credits.",
+        "developerName": "Phygital+",
+        "category": "Design",
+        "websiteURL": "https://dev.phygital.plus/mcp"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "phygital-plus",
+  "displayName": "Phygital+",
+  "description": "Phygital+ generation models over MCP: pick a model, read its live input schema, hand over a file, start a generation and poll it to the result. Talks to the portal's MCP server at /api/mcp - OAuth by default, personal API key for setups without it.",
+  "version": "0.2.0",
+  "author": {
+    "name": "Phygital+"
+  },
+  "homepage": "https://dev.phygital.plus/mcp",
+  "keywords": [
+    "mcp",
+    "generation",
+    "image",
+    "video",
+    "phygital"
+  ]
+}

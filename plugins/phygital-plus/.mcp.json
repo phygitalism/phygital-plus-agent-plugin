@@ -1,0 +1,6 @@
+{
+  "phygital": {
+    "type": "http",
+    "url": "https://dev.phygital.plus/api/mcp"
+  }
+}
