@@ -21,6 +21,13 @@ codex plugin marketplace add <org>/phygital-plus-agent-plugins
 
 Дальше плагин ставится из каталога плагинов.
 
+## ChatGPT
+
+Для ChatGPT — отдельный плагин `plugins/phygital-plus-openai`: он подключается к
+`https://dev.phygital.plus/api/mcp/openai`, где у каждой модели свой инструмент
+вместо каталога и общего `generate`. Так требуют правила подачи приложений OpenAI.
+Подробности — в [plugins/phygital-plus-openai/README.md](plugins/phygital-plus-openai/README.md).
+
 ## Другие клиенты
 
 Любой клиент с поддержкой удалённых MCP-серверов (Streamable HTTP) подключается
@@ -28,9 +35,3 @@ codex plugin marketplace add <org>/phygital-plus-agent-plugins
 `plugins/phygital-plus/skills/` в таком случае вставляются в инструкции агента
 вручную.
 
-Подробности: [plugins/phygital-plus/README.md](plugins/phygital-plus/README.md).
-
----
-
-Репозиторий собирается автоматически из внутреннего репозитория портала, правки
-сюда напрямую не принимаются.

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "phygital-plus-openai",
+  "version": "0.1.0",
+  "description": "Phygital+ generation models for ChatGPT: one tool per model with its own input schema - images, video, audio, 3D and text - plus job status, cancel and file upload.",
+  "author": {
+    "name": "Phygital+"
+  },
+  "homepage": "https://dev.phygital.plus/mcp",
+  "keywords": ["mcp", "generation", "image", "video", "phygital"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Phygital+",
+        "shortDescription": "Image and video generation",
+        "longDescription": "Runs Phygital+ generative models from ChatGPT: each model is its own tool with its own input schema - create and edit images, generate video, music and speech, upscale, remove backgrounds, build 3D models. Every run happens on your Phygital+ account and spends its credits; results come back as links to your files.",
+        "developerName": "Phygital+",
+        "category": "Design",
+        "websiteURL": "https://dev.phygital.plus/mcp"
+      }
+    }
+  }
+}

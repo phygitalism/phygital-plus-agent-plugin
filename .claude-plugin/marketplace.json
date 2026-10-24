@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "phygital-plus",
+  "description": "Плагины Phygital+: доступ к генеративным моделям портала прямо из агента.",
+  "owner": {
+    "name": "Phygital+"
+  },
+  "plugins": [
+    {
+      "name": "phygital-plus",
+      "description": "Phygital+ generation models over MCP: pick a model, read its live input schema, hand over a file, start a generation and poll it to the result.",
+      "author": {
+        "name": "Phygital+"
+      },
+      "category": "design",
+      "source": "./plugins/phygital-plus",
+      "homepage": "https://dev.phygital.plus/mcp"
+    }
+  ]
+}
