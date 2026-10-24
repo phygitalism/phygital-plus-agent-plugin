@@ -26,7 +26,8 @@ time, and never "just to see what happens".
    **of that exact model**.
 3. If the input includes a file: get it into storage first — see **Files**, below.
 4. `generate` — get the `job_id`.
-5. `get_job` — poll until a terminal status.
+5. Wait for the result — the generation panel follows the job where the client shows
+   it; otherwise `get_job` with `waitSeconds=25`. See **Waiting for the result**.
 
 Step 2 is never skipped. Parameter names and allowed values come from the live node
 definition in the main backend: they differ between models and change over time. Input
@@ -40,7 +41,7 @@ error — not a saved call.
 | `list_models` | `category?`: `image` \| `video` \| `audio` \| `text` \| `3d` \| `other` | `{models: [{id, id_global, name, category, description, deprecated}]}` | `tasks:read` |
 | `get_model_schema` | `model`: slug or `id_global` | `{model, id_global, name, category, description, deprecated, averageTimeInSeconds, inputSchema, capabilities: {rules}, outputs}` | `tasks:read` |
 | `generate` | `model`, `input` (flat object) | `{job_id, status: "queued", model}` | `tasks:write` |
-| `get_job` | `jobId` | `{job_id, status, position, error?, result?, outputs?}` plus `resource_link` blocks for media | `tasks:read` |
+| `get_job` | `jobId`, `waitSeconds?` (0–25, server waits for the job) | `{job_id, status, position, error?, result?, outputs?}` plus `resource_link` blocks for media | `tasks:read` |
 | `cancel_job` | `jobId` | `{job_id, canceled: true}` | `tasks:write` |
 | `get_upload_url` | — | `{upload_url, method, content_type, file_field, auth, result_field}` | `files:write` |
 | `upload_file` | `filename`, `mime_type`, `data_base64` | `{storage_object_id, filename, mime_type, bytes}` | `files:write` |
@@ -235,9 +236,20 @@ input.
 | `failed` | failed; `error.code` + `error.message` | see below |
 | `canceled` | canceled | report it |
 
-`averageTimeInSeconds` from the schema sets the pace: first `get_job` after roughly half
-that time, then every 5–10 seconds. Polling more often than once every 3 seconds is
-pointless — neither the queue nor the generation moves that fast.
+**Where the client shows the generation panel** (Claude, ChatGPT, Cursor, VS Code and
+other MCP Apps hosts), `generate` opens it under your call. The panel checks the status
+itself, shows the queue, progress and result to the person, and posts one message when
+the job finishes. Do not call `get_job` then and do not write progress updates — wait
+for that message, then reply once with the result, its links and a short summary. The
+panel also puts the `job_id` into your context, so you can still cancel the job.
+
+**Everywhere else** (Codex, Claude Code and other clients without the panel), call
+`get_job` with `waitSeconds=25`. The server waits for the job and answers the moment it
+finishes; while it is still `queued` or `running`, call again right away — no sleep in
+between. One message with the result at the end, no progress messages on the way. If
+the panel was shown but no message came within a few minutes, fall back to the same.
+
+`averageTimeInSeconds` from the schema is a worst-case ceiling, not a time to wait.
 
 Budget roughly 3–5 × `averageTimeInSeconds` for waiting. Past that, do not stay silent:
 tell the user where the job stands (`status`, `position`) and ask whether to keep waiting
@@ -326,6 +338,8 @@ returned. `cancel_job` on an already finished job is pointless.
 - Invent parameter names, enum values, or a `storage_object_id`.
 - Carry one model's schema over to another, including a neighbouring version.
 - Wait past a sensible budget in silence instead of reporting back to the user.
+- Post a status message on every poll, or call `get_job` while the generation panel is
+  following the job.
 
 ## Connecting (for reference)
 

@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "phygital-plus",
-      "description": "Phygital+ generation models over MCP: pick a model, read its live input schema, hand over a file, start a generation and poll it to the result.",
+      "description": "Phygital+ generation models over MCP: pick a model, read its live input schema, hand over a file, start a generation and wait for the result.",
       "author": {
         "name": "Phygital+"
       },
