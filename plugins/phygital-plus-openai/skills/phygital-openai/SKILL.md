@@ -34,7 +34,7 @@ only what you were asked for, one job at a time, and never "just to see what com
    the person did not name one, pick the one the description fits best, or ask.
 2. If the input includes a file, put it into storage first (see **Files**).
 3. Call the model tool and keep the `job_id`.
-4. Poll `get_job` until the job is finished, then show the result.
+4. Wait for the result (see **Waiting for the result**), then show it.
 
 ## Building the arguments
 
@@ -100,14 +100,23 @@ Never print an upload `ticket` and never send it anywhere except its `upload_url
 
 ## Waiting for the result
 
-A model tool returns at once with `{job_id, status: "queued", poll_after_seconds}`. Sleep
-exactly `poll_after_seconds`, call `get_job`, and repeat with the value from each answer.
-Do not wait for a model's worst-case time first: most jobs finish far sooner.
+A model tool returns at once with `{job_id, status: "queued", ...}`.
+
+- **The generation panel is shown** (ChatGPT and other clients with MCP Apps): the panel
+  follows the job by itself, shows the queue and progress, and posts **one** message
+  when the job is done, with the result or the error. Do not call `get_job` meanwhile;
+  wait for that message and answer it with the result.
+- **No panel, or no message within a few minutes:** call `get_job` with
+  `waitSeconds=25`. The server answers the moment the job finishes, so while it is
+  still `queued` or `running`, call again right away, with no pause of your own.
+
+Do not post progress updates while the job runs: one message with the result, its
+links and a short summary is enough.
 
 | `status` | Meaning | What to do |
 |---|---|---|
-| `queued` | waiting in line; `position` is the place | keep polling |
-| `running` | being generated | keep polling |
+| `queued` | waiting in line; `position` is the place | keep waiting |
+| `running` | being generated | keep waiting |
 | `completed` | done; `outputs` lists the files, `result` holds text values | show the result |
 | `failed` | `error.code`, `error.message`, `error.retryable` | see **When a job fails** |
 | `canceled` | stopped | report it |
