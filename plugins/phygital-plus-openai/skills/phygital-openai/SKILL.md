@@ -105,8 +105,10 @@ A model tool returns at once with `{job_id, status: "queued", ...}`.
 - **The generation panel is shown** (ChatGPT and other clients with MCP Apps): the panel
   follows the job by itself, shows the queue and progress, and posts **one** message
   when the job is done, with the result or the error. Do not call `get_job` meanwhile;
-  wait for that message and answer it with the result.
-- **No panel, or no message within a few minutes:** call `get_job` with
+  wait for that message and answer it with the result. Tell the person in one line
+  that the panel is following the job: it can be closed at any time, and then no
+  message comes, so they only need to ask you again.
+- **No panel, or the person asks again:** call `get_job` with
   `waitSeconds=25`. The server answers the moment the job finishes, so while it is
   still `queued` or `running`, call again right away, with no pause of your own.
 

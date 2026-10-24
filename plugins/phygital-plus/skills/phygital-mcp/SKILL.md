@@ -242,12 +242,15 @@ itself, shows the queue, progress and result to the person, and posts one messag
 the job finishes. Do not call `get_job` then and do not write progress updates — wait
 for that message, then reply once with the result, its links and a short summary. The
 panel also puts the `job_id` into your context, so you can still cancel the job.
+Tell the person in one line that the panel is following the job. The panel can be
+closed at any time, and then no message comes: you cannot notice that yourself, so
+say that if nothing arrives they only need to ask you again.
 
 **Everywhere else** (Codex, Claude Code and other clients without the panel), call
 `get_job` with `waitSeconds=25`. The server waits for the job and answers the moment it
 finishes; while it is still `queued` or `running`, call again right away — no sleep in
 between. One message with the result at the end, no progress messages on the way. If
-the panel was shown but no message came within a few minutes, fall back to the same.
+the person asks again after the panel was shown, fall back to the same.
 
 `averageTimeInSeconds` from the schema is a worst-case ceiling, not a time to wait.
 
