@@ -1,32 +1,27 @@
 ---
-description: Проверить подключение к Phygital+ и объяснить, каким способом авторизоваться
+description: Check the Phygital+ connection and explain authentication options
 ---
 
-## Задача
+## Task
 
-Проверить, что MCP-сервер Phygital+ отвечает, и — если нет — объяснить человеку,
-какой из двух способов авторизации ему подходит.
+Check whether the Phygital+ MCP server responds. If it does not, explain the
+available authentication options.
 
-## Шаги
+## Steps
 
-1. Вызови `list_models` без аргументов. Каталог отвечает только под токеном,
-   поэтому этот вызов проверяет и сервер, и авторизацию.
+1. Call `list_models` without arguments. The catalog requires a token, so this
+   checks both server access and authentication.
+2. **Success:** report how many models are available and stop.
+3. **Authentication error** (`[UNAUTHORIZED; ...]`, HTTP 401, or a sign-in request):
+   explain both supported options and let the user choose.
 
-2. **Ответ пришёл** — назови, сколько моделей доступно, и на этом остановись.
-   Подключение работает, объяснять больше нечего.
+   **OAuth is the default.** The client opens the sign-in flow when connecting.
+   If it does not appear, reconnect through `/mcp` in Claude Code or reinstall
+   the plugin.
 
-3. **Ошибка авторизации** (`[UNAUTHORIZED; …]`, 401, требование входа) — сервер
-   поддерживает два способа, и выбор зависит от того, как устроен доступ у
-   человека. Покажи оба, не выбирая за него:
-
-   **OAuth — способ по умолчанию.** Ничего настраивать не нужно: клиент сам
-   откроет окно входа при первом обращении к серверу. Если окно не появилось,
-   переподключение делается командой `/mcp` (в Claude Code) или переустановкой
-   плагина.
-
-   **Личный API-ключ** — для стендов и клиентов, где OAuth не включён. Ключ
-   берётся в портале, в разделе «API-ключ» в шапке, и прописывается в конфиг
-   MCP самим человеком:
+   **Personal API key:** for development setups and clients without OAuth,
+   obtain a key from the portal's API key section. The user configures their
+   MCP client manually, using environment-variable substitution where supported:
 
    ```json
    {
@@ -38,12 +33,12 @@ description: Проверить подключение к Phygital+ и объя�
    }
    ```
 
-   Ключ кладётся в переменную окружения `PHYGITAL_API_KEY`, а не в файл.
+   Store the key in the `PHYGITAL_API_KEY` environment variable, not in a file.
+4. **Other error:** show the returned message. Server errors use the prefix
+   `[CODE; retryable=true|false|unknown]`. Retry automatically only when
+   `retryable=true`.
 
-4. **Другая ошибка** — покажи её текст как есть. У ошибок сервера есть префикс
-   `[CODE; retryable=true|false|unknown]`; повторяй сам только `retryable=true`.
+## Avoid
 
-## Чего не делать
-
-Не проси ключ в диалоге и не вставляй его в файлы за человека: ключ тратит его
-кредиты, и место ему в переменной окружения.
+Do not request an API key in chat or write it into files for the user. The key
+spends the account owner's credits and belongs in an environment variable.

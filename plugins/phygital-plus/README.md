@@ -1,65 +1,63 @@
-# Phygital+ для агентов
+# Phygital+ for agents
 
-Плагин подключает генеративные модели Phygital+ к агенту: выбрать модель,
-прочитать её живую схему входа, передать файл, запустить генерацию и дождаться
-результата.
+This plugin connects an agent to Phygital+ generative models: choose a model,
+read its current input schema, upload an input file, start a generation, and
+wait for the result.
 
-Внутри нет ничего, кроме описания: вся работа идёт на MCP-сервере портала
-(`/api/mcp`), а плагин отвечает за то, чтобы сервер оказался подключён, а агент
-знал, как им пользоваться.
+Generation runs on the remote MCP server at
+`https://dev.phygital.plus/api/mcp`. This is the production endpoint.
+The plugin supplies connection settings and instructions for the agent;
+it does not host or run the models locally.
 
-## Что внутри
+## Package contents
 
-| Что | Зачем |
-|---|---|
-| `.claude-plugin/plugin.json` | манифест для Claude Code |
-| `plugin.json` | портативный манифест для Codex, настройки OpenAI — в `extensions."com.openai"` |
-| `.mcp.json` | адрес MCP-сервера в формате Claude Code |
-| `mcp.json` | тот же сервер в формате Codex: `streamable-http`, OAuth через DCR |
-| `skills/phygital-mcp/` | навык: порядок вызовов, сборка входа, работа с файлами и ошибками |
-| `skills/phygital-which-ai/` | навык: какую модель взять под задачу |
-| `commands/` | `/phygital-plus:connect`, `:models`, `:generate`, `:job` — только Claude Code |
+| Path | Purpose |
+| --- | --- |
+| `.claude-plugin/plugin.json` | Claude Code manifest |
+| `plugin.json` | Portable manifest, with OpenAI settings under `extensions."com.openai"` |
+| `.mcp.json` | MCP connection in Claude Code format |
+| `mcp.json` | Streamable HTTP connection with OAuth through DCR |
+| `skills/phygital-mcp/` | Tool sequence, input schemas, uploads, job tracking, and errors |
+| `skills/phygital-which-ai/` | Model selection guidance |
+| `commands/` | Claude Code commands: `/phygital-plus:connect`, `:models`, `:generate`, and `:job` |
 
-Навыки — копия `docs/skills` из корня репозитория; правятся они
-там, а сюда переносятся `node scripts/sync-plugin-skills.mjs`. CI падает, если
-копия отстала: разъехавшийся навык обещает агенту инструменты, которых на
-сервере уже нет.
+Skills are included in this directory. Keep their instructions aligned with
+the tools and schemas exposed by the server.
 
-## Установка
+## Installation
 
 Claude Code:
 
-```
-claude plugin marketplace add <адрес этого репозитория>
+```sh
+claude plugin marketplace add phygitalism/phygital-plus-agent-plugin
 claude plugin install phygital-plus@phygital-plus
 ```
 
-Codex — маркетплейс объявлен в `.agents/plugins/marketplace.json`:
+Codex:
 
+```sh
+codex plugin marketplace add phygitalism/phygital-plus-agent-plugin
 ```
-codex plugin marketplace add <адрес этого репозитория>
-```
 
-дальше плагин ставится из каталога плагинов клиента.
+Then install the plugin from the client's plugin catalog.
+The Codex marketplace is declared in `.agents/plugins/marketplace.json`
+at the repository root.
 
-## Версии
+## Versions
 
-`version` стоит в обоих манифестах и поднимается вместе на каждый релиз:
-Claude Code сравнивает именно её, и без новой версии `claude plugin update`
-оставит у человека старую копию. Перед коммитом —
-`claude plugin validate --strict .` из корня репозитория.
+Keep `version` synchronized in `plugin.json` and `.claude-plugin/plugin.json`
+when releasing an update. Claude Code uses the version to detect plugin updates.
 
-## Авторизация
+## Authentication
 
-Сервер принимает два способа, и оба остаются рабочими.
+**OAuth is the packaged default.** The client opens the sign-in flow when
+connecting and stores the token. `.mcp.json` intentionally omits authorization
+headers so the client can use OAuth discovery.
 
-**OAuth — то, с чем плагин ставится.** Настраивать нечего: при первом обращении
-к серверу клиент сам откроет вход, дальше токен живёт у клиента. Именно этот
-путь описан в `.mcp.json` — заголовков там нет намеренно, иначе клиент не
-пойдёт по OAuth-дискавери.
-
-**Личный API-ключ** — для стендов и клиентов, где OAuth не включён. Ключ
-берётся в портале («API-ключ» в шапке) и прописывается в конфиг MCP руками:
+**Personal API keys** are available for development setups and clients without
+OAuth. Obtain a key from the portal's API key section and configure your client
+manually. The following example assumes the client supports environment-variable
+substitution in MCP headers:
 
 ```json
 {
@@ -71,17 +69,19 @@ Claude Code сравнивает именно её, и без новой вер�
 }
 ```
 
-Сам ключ — в переменной окружения `PHYGITAL_API_KEY`, не в файле: он тратит
-кредиты владельца.
+Store the key in `PHYGITAL_API_KEY`, not in the configuration file. Requests
+consume the account owner's credits. Use `/phygital-plus:connect` in Claude Code
+to check the connection.
 
-Что именно настроено у человека, покажет `/phygital-plus:connect`.
+## Other clients
 
-## Другие клиенты
+Any client supporting remote MCP over Streamable HTTP can use
+`https://dev.phygital.plus/api/mcp`. A plugin package is only needed by clients
+that support that format.
 
-Сервер обычный Streamable HTTP MCP, поэтому подключается всюду, где есть
-поддержка удалённых MCP-серверов, — плагин нужен только там, где есть формат
-плагинов (Claude Code, Codex). Адрес везде один: `https://dev.phygital.plus/api/mcp`.
+Skills are not transferred automatically to clients without skill support.
+Add the instructions from `skills/phygital-mcp/` manually; the portal also
+provides skill instructions on its `/skills` page.
 
-Навык при этом не переносится сам: там, где формата навыков нет, его текст
-вставляют в инструкции агента вручную — копия лежит в `skills/phygital-mcp/`
-и на странице `/skills` портала.
+For the separate OpenAI variant, see
+[Phygital+ OpenAI](../phygital-plus-openai/README.md).

@@ -1,24 +1,23 @@
 ---
-description: Показать модели Phygital+, подходящие под задачу
-argument-hint: [что нужно сгенерировать]
+description: Show Phygital+ models suited to a task
+argument-hint: "[what to generate]"
 ---
 
-## Задача
+## Task
 
-Подобрать модель под то, что описано в `$ARGUMENTS` (если аргументов нет —
-показать каталог целиком).
+Find models matching `$ARGUMENTS`. If no arguments are supplied, show the full catalog.
 
-## Шаги
+## Steps
 
-1. `list_models` — при явной категории в запросе передай `category`.
-2. Отбери подходящие по названию и описанию. Устаревшие (`deprecated`) не
-   предлагай, пока человек не спросит именно о них.
-3. Покажи таблицей: `id`, название, категория, одна строка описания.
-4. Если кандидат один и он очевиден — сразу вызови `get_model_schema` и назови
-   обязательные поля входа. Схему бери у той самой модели: параметры отличаются
-   между моделями и меняются со временем.
+1. Call `list_models`. Pass `category` when the request specifies one.
+2. Select matches by name and description. Do not suggest models marked
+   `deprecated` unless the user explicitly asks for them.
+3. Show a table with the model ID, name, category, and a one-line description.
+4. If there is one clear candidate, call `get_model_schema` and list its required
+   inputs. Use that exact model's current schema: parameters differ across models
+   and change over time.
 
-## Чего не делать
+## Avoid
 
-Не описывай входы по памяти и не переноси их по аналогии с другой моделью —
-это гарантированная ошибка валидации вместо сэкономленного вызова.
+Do not describe inputs from memory or copy parameters from another model.
+Fetch the schema to avoid validation errors.

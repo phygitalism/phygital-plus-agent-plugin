@@ -1,18 +1,18 @@
 ---
-description: Проверить статус задачи Phygital+ по её id
+description: Check the status of a Phygital+ job by its ID
 argument-hint: <job_id>
 ---
 
-## Задача
+## Task
 
-Показать состояние задачи `$ARGUMENTS`.
+Show the status of the job identified by `$ARGUMENTS`.
 
-## Шаги
+## Steps
 
-1. `get_job` с этим `job_id`.
-2. Терминальный статус — покажи результат или причину отказа.
-3. Задача ещё идёт — назови статус (и место в очереди). Если человек
-   попросил дождаться — `get_job` с `waitSeconds=25`, снова сразу, пока не
-   закончится; промежуточных статусов не пиши.
-4. `job_id` не найден — скажи прямо: сервер не хранит историю задач, и по
-   потерянному id восстановить нечего.
+1. Call `get_job` with that `job_id`.
+2. If the job has reached a terminal status, show the result or the failure reason.
+3. If it is still running, report its status and queue position. If the user asked
+   you to wait, call `get_job` with `waitSeconds=25` and repeat immediately until
+   it finishes. Do not post intermediate status messages while waiting.
+4. If `job_id` cannot be found, explain that the server has no job-history listing
+   and cannot recover a lost ID.
