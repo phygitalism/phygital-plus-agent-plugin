@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "phygital-plus-openai",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Phygital+ generation models for ChatGPT: one tool per model with its own input schema - images, video, audio, 3D and text - plus job status, cancel and file upload.",
   "author": {
     "name": "PHYGITALISM, Inc."
@@ -91,7 +91,7 @@
           "Use GPT Text in Phygital+ to write three short English taglines for a lavender perfume.",
           "Use Phygital+ to read aloud in English: Welcome to Phygital Plus."
         ],
-        "demo_recording_url": "https://github.com/phygitalism/phygital-plus-agent-plugin/releases/download/openai-v0.1.1/phygital-plus-demo.mp4"
+        "demo_recording_url": "https://github.com/phygitalism/phygital-plus-agent-plugin/releases/download/openai-v0.1.1/phygital-plus-demo.mp4?download=1"
       },
       "publication": {
         "release_notes": "Initial release connecting Phygital+ generation tools, file uploads, and job status to ChatGPT and Codex."

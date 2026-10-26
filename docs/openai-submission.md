@@ -1,4 +1,4 @@
-# OpenAI submission preparation — 0.1.1
+# OpenAI submission preparation — 0.1.2
 
 ## Recorded development rehearsal
 

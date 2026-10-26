@@ -20,11 +20,11 @@ uses `/api/mcp/openai`; the other plugin in this repository uses `/api/mcp`.
 
 ## Demo
 
-[English demo: FLUX, GPT Text, and unsupported history retrieval](https://github.com/phygitalism/phygital-plus-agent-plugin/releases/download/openai-v0.1.1/phygital-plus-demo.mp4)
+[English demo: FLUX, GPT Text, and unsupported history retrieval](https://github.com/phygitalism/phygital-plus-agent-plugin/releases/download/openai-v0.1.1/phygital-plus-demo.mp4?download=1)
 
 ## Submission status
 
-Version 0.1.1 prepares the package for submission. A GitHub release is not an
+Version 0.1.2 prepares the package for submission. A GitHub release is not an
 OpenAI review approval or public directory publication.
 See [submission preparation](../../docs/openai-submission.md) for evidence and open checks.
 Build a ZIP from this directory only, excluding the sibling plugin and marketplace files.
