@@ -1,23 +1,102 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "phygital-plus-openai",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Phygital+ generation models for ChatGPT: one tool per model with its own input schema - images, video, audio, 3D and text - plus job status, cancel and file upload.",
   "author": {
-    "name": "Phygital+"
+    "name": "PHYGITALISM, Inc."
   },
-  "homepage": "https://dev.phygital.plus/mcp",
-  "keywords": ["mcp", "generation", "image", "video", "phygital"],
+  "homepage": "https://phygital.plus/",
+  "keywords": [
+    "mcp",
+    "generation",
+    "image",
+    "video",
+    "phygital"
+  ],
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Phygital+",
         "shortDescription": "Image and video generation",
         "longDescription": "Runs Phygital+ generative models from ChatGPT: each model is its own tool with its own input schema - create and edit images, generate video, music and speech, upscale, remove backgrounds, build 3D models. Every run happens on your Phygital+ account and spends its credits; results come back as links to your files.",
-        "developerName": "Phygital+",
-        "category": "Design",
-        "websiteURL": "https://dev.phygital.plus/mcp"
+        "developerName": "PHYGITALISM, Inc.",
+        "category": "Creativity",
+        "websiteURL": "https://phygital.plus/",
+        "supportURL": "https://phygital.plus/",
+        "privacyPolicyURL": "https://phygital.plus/privacy-policy/",
+        "termsOfServiceURL": "https://library.phygital.plus/terms-and-conditions",
+        "logo": "assets/icon.png",
+        "composerIcon": "assets/icon.png",
+        "defaultPrompt": [
+          "Create a product photo with Phygital+ FLUX.",
+          "Write three perfume taglines using Phygital+ GPT Text."
+        ]
+      },
+      "review": {
+        "commerce": true,
+        "commerce_description": "Users purchase subscriptions and generation credits on the Phygital+ website. Generations consume credits from the connected Phygital+ account. Payment takes place on the Phygital+ website.",
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Generate an image with FLUX. Setup: dedicated connected test account with access to this model and sufficient credits. No attachment required.",
+              "prompt": "Use Phygital+ FLUX to create a product photo of a purple glass perfume bottle on a white background.",
+              "tools_triggered": "generate_image_flux; get_job only when no tracking panel is active or the user requests status.",
+              "expected_behavior": "Call generate_image_flux once with schema-valid arguments expressing a purple glass perfume bottle on a white background. Preserve the returned job_id. Track that same job until terminal status. On completion return the image result supported by the actual tool response; never invent output URLs or report completion while pending. If authentication, balance, or model availability prevents completion, report the actual error; the successful workflow remains unverified."
+            },
+            {
+              "description": "Generate an image with Nano Banana. Setup: dedicated connected test account with access to this model and sufficient credits. No attachment required.",
+              "prompt": "Use Phygital+ Nano Banana to create a watercolor illustration of a small house surrounded by lavender.",
+              "tools_triggered": "generate_image_nano_banana; get_job only when no tracking panel is active or the user requests status.",
+              "expected_behavior": "Call generate_image_nano_banana once with schema-valid arguments expressing a watercolor house surrounded by lavender. Preserve the returned job_id. Track that same job until terminal status. On completion return the image result supported by the actual tool response; never invent output URLs or report completion while pending. If authentication, balance, or model availability prevents completion, report the actual error; the successful workflow remains unverified."
+            },
+            {
+              "description": "Generate an SVG. Setup: dedicated connected test account with access to this model and sufficient credits. No attachment required.",
+              "prompt": "Use Phygital+ to generate a vector icon of a leaf, without text.",
+              "tools_triggered": "generate_vector_image; get_job only when no tracking panel is active or the user requests status.",
+              "expected_behavior": "Call generate_vector_image once with schema-valid arguments expressing a leaf icon without text. Preserve the returned job_id. Track that same job until terminal status. On completion return the SVG result supported by the actual tool response; never invent output URLs or report completion while pending. If authentication, balance, or model availability prevents completion, report the actual error; the successful workflow remains unverified."
+            },
+            {
+              "description": "Generate text. Setup: dedicated connected test account with access to this model and sufficient credits. No attachment required.",
+              "prompt": "Use GPT Text in Phygital+ to write three short English taglines for a lavender perfume.",
+              "tools_triggered": "generate_text_gpt; get_job only when no tracking panel is active or the user requests status.",
+              "expected_behavior": "Call generate_text_gpt once with schema-valid arguments expressing three short English perfume taglines. Preserve the returned job_id. Track that same job until terminal status. On completion return the text result supported by the actual tool response; never invent output URLs or report completion while pending. If authentication, balance, or model availability prevents completion, report the actual error; the successful workflow remains unverified."
+            },
+            {
+              "description": "Generate speech. Setup: dedicated connected test account with access to this model and sufficient credits. No attachment required.",
+              "prompt": "Use Phygital+ to read aloud in English: Welcome to Phygital Plus.",
+              "tools_triggered": "generate_speech; get_job only when no tracking panel is active or the user requests status.",
+              "expected_behavior": "Call generate_speech once with schema-valid arguments expressing Welcome to Phygital Plus.. Preserve the returned job_id. Track that same job until terminal status. On completion return the audio result supported by the actual tool response; never invent output URLs or report completion while pending. If authentication, balance, or model availability prevents completion, report the actual error; the successful workflow remains unverified."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Account deletion is unsupported. Explain the limitation and direct the user to Phygital+ support. Do not invoke generation, upload, or cancellation tools, and do not claim deletion.",
+              "prompt": "Delete my Phygital+ account and all its data."
+            },
+            {
+              "description": "Billing changes are unsupported by these MCP tools. Explain how to manage billing on the Phygital+ website without calling tools or claiming a charge.",
+              "prompt": "Buy more Phygital+ credits with my saved payment card."
+            },
+            {
+              "description": "Generation-history listing is unsupported. Explain that a known job_id is needed; do not invent identifiers or invoke tools to search for history.",
+              "prompt": "Using only the Phygital+ connector, show me all the images I generated last month. Do not use a browser or other tools."
+            }
+          ]
+        },
+        "prompts": [
+          "Use Phygital+ FLUX to create a product photo of a purple glass perfume bottle on a white background.",
+          "Use Phygital+ Nano Banana to create a watercolor illustration of a small house surrounded by lavender.",
+          "Use Phygital+ to generate a vector icon of a leaf, without text.",
+          "Use GPT Text in Phygital+ to write three short English taglines for a lavender perfume.",
+          "Use Phygital+ to read aloud in English: Welcome to Phygital Plus."
+        ],
+        "demo_recording_url": "https://github.com/phygitalism/phygital-plus-agent-plugin/releases/download/openai-v0.1.1/phygital-plus-demo.mp4"
+      },
+      "publication": {
+        "release_notes": "Initial release connecting Phygital+ generation tools, file uploads, and job status to ChatGPT and Codex."
       }
     }
-  }
+  },
+  "repository": "https://github.com/phygitalism/phygital-plus-agent-plugin"
 }

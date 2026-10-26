@@ -1,38 +1,34 @@
-# Phygital+ для ChatGPT
+# Phygital+ OpenAI plugin
 
-Отдельный плагин под OpenAI: смотрит на `https://dev.phygital.plus/api/mcp/openai`, а не
-на `/api/mcp`.
+Connects ChatGPT and Codex to the production MCP endpoint:
+`https://dev.phygital.plus/api/mcp/openai`.
 
-## Почему отдельно
+The `dev.phygital.plus` hostname is the production deployment for this plugin.
+Authentication uses OAuth with Dynamic Client Registration (DCR).
+Each generation runs on the connected Phygital+ account and consumes credits.
+Users purchase subscriptions and credits on the Phygital+ website.
 
-Правила подачи приложений в ChatGPT
-([App submission guidelines](https://developers.openai.com/apps-sdk/app-submission-guidelines))
-требуют отдельный инструмент на каждую операцию и запрещают discovery с универсальным
-исполнителем:
+## Package
 
-> Expose each model-callable operation as a separate tool with a clear description,
-> input schema, and annotations.
->
-> Do not use discovery, operation selection, or schema fetching with a generic executor.
+- `plugin.json`: listing, publisher, commerce, review cases, and demo URL.
+- `mcp.json`: production MCP endpoint and OAuth configuration.
+- `skills/phygital-openai/SKILL.md`: model selection, uploads, and job tracking.
+- `assets/icon.png`: listing and composer icon.
 
-Основной плагин `phygital-plus` устроен ровно так: `list_models` → `get_model_schema` →
-`generate`. Для Claude, Codex и остальных клиентов это удобно, и там он остаётся как
-есть. На `/api/mcp/openai` вместо этих трёх инструментов у каждой модели свой
-(`generate_image_gpt`, `generate_video_kling`, `upscale_image`, …) со схемой входа этой
-модели. У всех инструментов явно выставлены `readOnlyHint` / `destructiveHint` /
-`openWorldHint`.
+Each model has a separate tool with its own input schema. This OpenAI variant
+uses `/api/mcp/openai`; the other plugin in this repository uses `/api/mcp`.
 
-## Что внутри
+## Demo
 
-| Что | Зачем |
-|---|---|
-| `plugin.json` | манифест, витрина OpenAI — в `extensions."com.openai"` |
-| `mcp.json` | сервер `/api/mcp/openai`, OAuth через DCR |
-| `skills/phygital-openai/` | инструкция агенту под инструменты по моделям |
+[English demo: FLUX, GPT Text, and unsupported history retrieval](https://github.com/phygitalism/phygital-plus-agent-plugin/releases/download/openai-v0.1.1/phygital-plus-demo.mp4)
 
-## Набор моделей
+## Submission status
 
-Список инструментов зафиксирован на сервере (`MODEL_TOOLS` в `app/mcp_openai.py`
-портала). OpenAI сканирует метаданные инструментов при подаче версии, поэтому новая
-модель появляется в ChatGPT только после правки этого списка и подачи новой версии
-плагина. Хост сервера между версиями менять нельзя, только путь.
+Version 0.1.1 prepares the package for submission. A GitHub release is not an
+OpenAI review approval or public directory publication.
+See [submission preparation](../../docs/openai-submission.md) for evidence and open checks.
+Build a ZIP from this directory only, excluding the sibling plugin and marketplace files.
+Do not include credentials, OAuth tokens, or reviewer account details in source or archives.
+
+After MCP server changes, use the portal's scan flow and check tool availability.
+Package metadata and skill changes require an updated ZIP.
